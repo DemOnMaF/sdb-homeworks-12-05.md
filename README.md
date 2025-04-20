@@ -60,7 +60,13 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 <details>
 <summary>Ответ</summary>
 
-```
+После анализа исходного запроса было выявляено, что наиболее узким местом в предлагаемом запросе является то, что оконная функция обрабатывает излишние таблицы (inventory, rental и film). Исходя из того, что нужно посчитать сумму платежей покупателей за конкретную дату, обработка и присоединение этих таблиц не имеет смысла т.к. дальше данные не используются. Все необходимые данные есть в таблицах payment и customer, соответственно, остальные таблицы можно исключить.
+
+```sql
+select distinct concat(c.last_name, ' ', c.first_name), sum(p.amount) over (partition by c.customer_id)
+from payment p, customer c
+where date(p.payment_date) = '2005-07-30' and p.customer_id = c.customer_id ;
+
 
 ```
 
