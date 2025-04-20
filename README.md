@@ -28,7 +28,15 @@
 <details>
 <summary>Ответ</summary>
 
-```
+```sql
+SELECT
+ ROUND(SUM(index_length) / SUM(data_length + index_length) * 100, 2) AS "процентное отношение размера индексов к общему размеру (данные + индексы)",
+ CONCAT(ROUND(SUM(data_length) / (1024 * 1024), 2), ' MB') AS "Общий размер таблиц",
+ CONCAT(ROUND(SUM(index_length) / (1024 * 1024), 2), ' MB') AS "Общий размер индексов"
+FROM
+ information_schema.TABLES
+WHERE
+ table_schema = 'sakila';
 
 ```
 
