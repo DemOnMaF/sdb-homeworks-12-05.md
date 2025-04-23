@@ -72,6 +72,22 @@ where date(p.payment_date) = '2005-07-30' and p.customer_id = c.customer_id ;
 
 ![image](img/02.png)
 
+После доработки:
+
+```sql
+explain analyze
+select distinct concat(c.last_name, ' ', c.first_name) AS full_name, SUM(p.amount) OVER (PARTITION BY c.customer_id, f.title)
+FROM payment p
+JOIN rental r ON p.payment_date = r.rental_date
+JOIN customer c ON r.customer_id = c.customer_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON i.film_id = f.film_id
+WHERE payment_date >= '2005-07-30' and payment_date < DATE_ADD('2005-07-30', INTERVAL 1 DAY) ;
+
+
+
+```
+
 </details>
 
 ---
